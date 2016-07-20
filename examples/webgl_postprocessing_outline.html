@@ -67,24 +67,25 @@
 			var mouse = new THREE.Vector2();
 			var selectedObjects = [];
 
-			var composer, effectFXAA, outlinePass;
+			var composer, effectFXAA, outlinePass, outlineBaseColor = new THREE.Color();
 			var obj3d = new THREE.Object3D();
 
 			var group = new THREE.Object3D();
 
 			var params = {
 				edgeStrength: 3.0,
-				edgeThickness: 1.0
-			}
+				edgeThickness: 1.0,
+				pulse: true,
+				pulsePeriod: 1
+
+			};
 
 			// Init gui
 			var gui = new dat.GUI();
-			gui.add( params, "edgeStrength", 0.01, 10 ).onChange( function(value) {
-	        outlinePass.edgeStrength = Number(value);
-	    });
-			gui.add( params, "edgeThickness", 0.01, 5 ).onChange( function(value) {
-	        outlinePass.edgeThickness = Number(value);
-	    })
+			gui.add( params, "edgeStrength", 0.01, 10 );
+			gui.add( params, "edgeThickness", 0.01, 5 );
+			gui.add( params, "pulse" );
+			gui.add( params, "pulsePeriod", 0.1, 5 );
 			var Configuration=function(){
 	            this.color = "#ffffff";
 	    };
@@ -104,7 +105,7 @@
 	            } : null;
 	        }
 	      var rgba = hexToRgb(colorValue);
-        var color = outlinePass.edgeColor;
+        var color = outlineBaseColor;
         color.r = rgba.r/255;
         color.g = rgba.g/255;
         color.b = rgba.b/255;
@@ -335,10 +336,13 @@
 				camera.aspect = width / height;
 				camera.updateProjectionMatrix();
 
+
 				renderer.setSize( width, height );
-        composer.setSize( width, height );
+        		composer.setSize( width, height );
 				effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
 			}
+
+			var pulseFirstTimer = -1;
 
 			function animate() {
 
@@ -351,6 +355,23 @@
 				renderer.autoClear = true;
 				renderer.setClearColor( 0xf0f0f0 );
 				renderer.setClearAlpha( 0.0 );
+
+				outlinePass.edgeColor.copy( outlineBaseColor );
+				if( params.pulse ) {
+					var timer = performance.now();
+					if( pulseFirstTimer === -1 ) {
+						pulseFirstTimer = timer;
+					}
+					var intensity = 0.25 + Math.cos( ( ( timer - pulseFirstTimer ) * 0.01 ) / params.pulsePeriod ) * 0.25;
+					console.log( "intensity", intensity );
+					outlinePass.edgeColor.multiplyScalar( intensity );
+				}
+				else {
+					pulseFirstTimer = -1;
+				}
+
+				outlinePass.edgeStrength = params.edgeStrength;
+		        outlinePass.edgeThickness = params.edgeThickness;
 
 				composer.render();
 				controls.update();
