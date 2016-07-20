@@ -342,8 +342,7 @@
 				effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
 			}
 
-			var pulseFirstTimer = -1;
-
+		
 			function animate() {
 
 				requestAnimationFrame( animate );
@@ -357,18 +356,7 @@
 				renderer.setClearAlpha( 0.0 );
 
 				outlinePass.edgeColor.copy( outlineBaseColor );
-				if( params.pulse ) {
-					var timer = performance.now();
-					if( pulseFirstTimer === -1 ) {
-						pulseFirstTimer = timer;
-					}
-					var intensity = 0.25 + Math.cos( ( ( timer - pulseFirstTimer ) * 0.01 ) / params.pulsePeriod ) * 0.25;
-					console.log( "intensity", intensity );
-					outlinePass.edgeColor.multiplyScalar( intensity );
-				}
-				else {
-					pulseFirstTimer = -1;
-				}
+				outlinePass.pulsePeriod = params.pulse ? params.pulsePeriod : 0;
 
 				outlinePass.edgeStrength = params.edgeStrength;
 		        outlinePass.edgeThickness = params.edgeThickness;

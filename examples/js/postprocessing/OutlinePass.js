@@ -10,6 +10,7 @@ THREE.OutlinePass = function ( resolution, scene, camera, selectedObjects ) {
 	this.edgeColor = new THREE.Color(1, 1, 1);
 	this.edgeThickness = 1.0;
 	this.edgeStrength = 3.0;
+	this.pulsePeroid = 0;	
 
 	THREE.Pass.call( this );
 
@@ -77,6 +78,8 @@ THREE.OutlinePass = function ( resolution, scene, camera, selectedObjects ) {
 
 	this.quad = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2, 2 ), null );
 	this.scene.add( this.quad );
+
+	this.tempPulseColor = new THREE.Color();
 };
 
 THREE.OutlinePass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
@@ -211,12 +214,17 @@ THREE.OutlinePass.prototype = Object.assign( Object.create( THREE.Pass.prototype
 		this.separableBlurMaterial2.uniforms[ "direction" ].value = THREE.OutlinePass.BlurDirectionY;
 		renderer.render( this.scene, this.camera, this.renderTargetEdgeBuffer2, true );
 
+		this.tempPulseColor.copy( this.edgeColor );
+		if( this.pulsePeriod > 0 ) {
+			this.tempPulseColor.multiplyScalar( 0.25 + Math.cos( ( performance.now() * 0.01 ) / this.pulsePeriod ) * 0.25 );
+		}
+
 		// Blend it additively over the input texture
 		this.quad.material = this.overlayMaterial;
 		this.overlayMaterial.uniforms[ "maskTexture" ].value = this.renderTargetMaskBuffer.texture;
 		this.overlayMaterial.uniforms[ "edgeTexture1" ].value = this.renderTargetEdgeBuffer1.texture;
 		this.overlayMaterial.uniforms[ "edgeTexture2" ].value = this.renderTargetEdgeBuffer2.texture;
-		this.overlayMaterial.uniforms[ "edgeColor" ].value = this.edgeColor;
+		this.overlayMaterial.uniforms[ "edgeColor" ].value = this.tempPulseColor;		
 		this.overlayMaterial.uniforms[ "edgeStrength" ].value = this.edgeStrength;
 
 		if ( maskActive ) renderer.context.enable( renderer.context.STENCIL_TEST );
