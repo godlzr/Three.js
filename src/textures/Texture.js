@@ -67,6 +67,8 @@ Texture.prototype = {
 
 	set needsUpdate( value ) {
 
+		if( this.image === undefined ) console.trace( "THREE: Requesting update for texture that has an image === undefined.", this );
+		
 		if ( value === true ) this.version ++;
 
 	},
