@@ -269,12 +269,21 @@
 
 					}
 
+					var side = material.side;
+
 					switch ( params.side ) {
 
-						case 'front': material.side = THREE.FrontSide; break;
-						case 'back': material.side = THREE.BackSide; break;
-						case 'double': material.side = THREE.DoubleSide; break;
+						case 'front': side = THREE.FrontSide; break;
+						case 'back': side = THREE.BackSide; break;
+						case 'double': side = THREE.DoubleSide; break;
 	
+					}
+
+					if( material.side !== side ) {
+						
+						material.side = side;
+						material.needsUpdate = true;
+
 					}
 
 					mesh.material = material;

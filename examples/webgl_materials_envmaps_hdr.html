@@ -61,6 +61,7 @@
 				envMap: "HDR",
 				projection: 'normal',
 				roughness: 1.0,
+				metalness: 0.5,
 				bumpScale: 0.3,
 				background: false,
 				exposure: 1.0,
@@ -130,7 +131,7 @@
 					map.repeat.set( 9, 2 );
 					standardMaterial.map = map;
 					standardMaterial.roughnessMap = map;
-					standardMaterial.bumpMap = map;
+			//		standardMaterial.bumpMap = map;
 					standardMaterial.needsUpdate = true;
 				} );
 
@@ -219,6 +220,7 @@
 
 				gui.add( params, 'envMap', [ 'None', 'LDR', 'HDR', 'RGBM16' ] );
 				gui.add( params, 'roughness', 0, 1 );
+				gui.add( params, 'metalness', 0, 1 );
 				gui.add( params, 'bumpScale', - 1, 1 );
 				gui.add( params, 'exposure', 0.1, 2 );
 				gui.add( params, 'side', [ 'front', 'back', 'double' ] );
@@ -255,6 +257,7 @@
 				if ( standardMaterial !== undefined ) {
 
 					standardMaterial.roughness = params.roughness;
+					standardMaterial.metalness = params.metalness;
 					standardMaterial.bumpScale = - 0.05 * params.bumpScale;
 
 					var newEnvMap = standardMaterial.envMap;
