@@ -147,6 +147,7 @@ var initRingMaterials = function() {
 
     ringMaterial = new THREE.ShaderMaterial(
             {uniforms:clonedUniforms2,
+            extensions:library.shaderSource.extensions,
             vertexShader:library.shaderSource.vertexShader,
             fragmentShader:library.shaderSource.fragmentShader});
     ringMaterial.map = true;

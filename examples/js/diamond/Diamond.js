@@ -12,8 +12,7 @@
                 gl_FragColor = vec4( color.x, color.y, color.z, 1.0 );\
             }";
 
-        DiamondShader.fragmenShaderDiamond = "#extension GL_OES_standard_derivatives : enable\
-            precision highp float;\
+        DiamondShader.fragmenShaderDiamond = "\
             #define PI 3.141592653589793\n\
             #include <cube_uv_reflection_fragment>\
             varying vec2 vUv;\
@@ -288,11 +287,11 @@
             this.material.uniforms["IBLTexture"].value = this.envTexture;
             this.material.vertexShader = DiamondShader.material.vertexShader;
             this.material.fragmentShader = DiamondShader.material.fragmentShader;
-            this.cubeCamera.renderTarget.generateMipmaps = false;
-            this.cubeCamera.renderTarget.magFilter = THREE.NearestFilter;
-            this.cubeCamera.renderTarget.minFilter = THREE.NearestFilter;
-            this.cubeCamera.renderTarget.format = THREE.RGBAFormat;
-            this.cubeCamera.renderTarget.type = THREE.FloatType;
+            this.cubeCamera.renderTarget.texture.generateMipmaps = false;
+            this.cubeCamera.renderTarget.texture.magFilter = THREE.NearestFilter;
+            this.cubeCamera.renderTarget.texture.minFilter = THREE.NearestFilter;
+            this.cubeCamera.renderTarget.texture.format = THREE.RGBAFormat;
+            this.cubeCamera.renderTarget.texture.type = THREE.FloatType;
             this.geometry = null;
             this.mesh = null;
             this.normalBakeHelperMesh = null;

@@ -16,9 +16,8 @@ var vertexShaderIBL = "varying vec2 vUv; \n\
    Normal = normalMatrix * normal;\n\
    gl_Position = projectionMatrix * viewMatrix * vec4(vecPos, 1.0);\n\
 }";
-var fragmentShaderIBL = "precision highp float;\n\
-   #extension GL_OES_standard_derivatives : enable\n\
-   #define PI 3.14\n\
+var fragmentShaderIBL = "\
+   #define PI 3.141592653589793\n\
    #define USE_HDR\n\
    varying vec2 vUv; \n\
    varying vec3 vecPos;\n\
@@ -169,6 +168,10 @@ var fragmentShaderIBL = "precision highp float;\n\
 
 var shaderSource =
 {
+    extensions: {
+      derivatives: true
+    },
+
     uniforms: {
         IBLTexture: {type: 't', value: null},
         NormalMap: {type: 't', value: null},

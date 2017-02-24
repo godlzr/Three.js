@@ -85,8 +85,8 @@ var diamondArray = [];
 var diamondPrototypeArray = [];
 
 var onReadyCallBack = function() {
-    sparkle1.material.uniforms["screenTexture"].value = composer.renderTarget2;
-    sparkle2.material.uniforms["screenTexture"].value = composer.renderTarget2;
+    sparkle1.material.uniforms["screenTexture"].value = composer.renderTarget2.texture;
+    sparkle2.material.uniforms["screenTexture"].value = composer.renderTarget2.texture;
     bObjectLoaded = true;
 };
 
@@ -147,6 +147,7 @@ var initRingMaterials = function() {
 
     ringMaterial = new THREE.ShaderMaterial(
             {uniforms:clonedUniforms2,
+            extensions:library.shaderSource.extensions,
             vertexShader:library.shaderSource.vertexShader,
             fragmentShader:library.shaderSource.fragmentShader});
     ringMaterial.map = true;
